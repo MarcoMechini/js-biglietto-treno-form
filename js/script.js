@@ -10,15 +10,26 @@ const detTar = document.querySelector("#detTar span:nth-child(2)");
 
 
 userForm.addEventListener("submit", function (event) {
+
     event.preventDefault();
 
     const name = userName.value.trim()
     const distance = parseInt(userDistance.value);
     const age = parseInt(userAge.value);
+    let costoAlKm = 0.21;
+    let message = 'base';
 
+    //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
     //DESCTRUCTURING ritorna un array e assegno in conlo stesso ordine di ritorno alle variabili che ho dichiarato 
     //ed ognuna ha il suo tipo es[numero, stringa] e sia la dichiarazione che il ritorno devono essere tra parentesi quadre
-    const [ticketPrice, message] = calculateTicketPrice(age, distance);
+
+    // getter/setter => design pattern => soluzione generica ad un problema generico
+
+    const ticketPrice = getTicketPrice(age, distance, costoAlKm);
+
+    if (ticketPrice < costoAlKm * distance) {
+        message = 'scontata';
+    }
 
     userCard.classList.remove("d-none")
 
@@ -32,19 +43,17 @@ userForm.addEventListener("submit", function (event) {
  *
  * @param {number} eta
  * @param {number} kilometri
- * @returns {number, string}
+ * @returns {string}
  */
-const calculateTicketPrice = (eta, kilometri) => {
-    let costoAlKm = 0.21;
+const getTicketPrice = (eta, kilometri, costoAlKm) => {
     let sconto = 0;
-    let mes = 'standard'
+    let prezzo;
+
     if (eta < 18) {
         sconto = 20;
-        mes = 'scontata'
     } else if (eta >= 65) {
         sconto = 40;
-        mes = 'scontata'
     }
-
-    return [(kilometri * costoAlKm * (100 - sconto) / 100).toFixed(2), mes];
+    prezzo = (kilometri * costoAlKm * (100 - sconto) / 100).toFixed(2)
+    return prezzo;
 }
