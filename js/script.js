@@ -15,32 +15,36 @@ userForm.addEventListener("submit", function (event) {
     const name = userName.value.trim()
     const distance = parseInt(userDistance.value);
     const age = parseInt(userAge.value);
-    const ticketPrice = calculateTicketPrice(age, distance).toFixed(2);
+
+    //DESCTRUCTURING ritorna un array e assegno in conlo stesso ordine di ritorno alle variabili che ho dichiarato 
+    //ed ognuna ha il suo tipo es[numero, stringa] e sia la dichiarazione che il ritorno devono essere tra parentesi quadre
+    const [ticketPrice, message] = calculateTicketPrice(age, distance);
 
     userCard.classList.remove("d-none")
 
     detName.innerHTML = name;
-    detSc.innerHTML = 'Lo sconto è: ', 'SCONTO DA INSERIRE';
+    detSc.innerHTML = `La tariffa che ti è stata applicata è: tariffa ${message}`;
     detTar.innerHTML = ticketPrice;
 })
-
 
 /**
  * Description placeholder
  *
  * @param {number} eta
  * @param {number} kilometri
- * @returns {number}
+ * @returns {number, string}
  */
 const calculateTicketPrice = (eta, kilometri) => {
     let costoAlKm = 0.21;
     let sconto = 0;
-
+    let mes = 'standard'
     if (eta < 18) {
         sconto = 20;
+        mes = 'scontata'
     } else if (eta >= 65) {
         sconto = 40;
+        mes = 'scontata'
     }
 
-    return kilometri * costoAlKm * (100 - sconto) / 100;
+    return [(kilometri * costoAlKm * (100 - sconto) / 100).toFixed(2), mes];
 }
